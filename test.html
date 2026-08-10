@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<!-- ****************************************************************
+     HARESH KHUMAR - PERSONAL PORTFOLIO WEBSITE
+     ****************************************************************
+
+     HOW TO EDIT THIS FILE (simple guide):
+
+     1. Open this file with Notepad (right-click > Open with > Notepad).
+     2. Press Ctrl+F and search for the sentence you want to change.
+     3. Change ONLY the words between > and <  .
+        Example:  <h3>Resume</h3>  ->  <h3>My Resume</h3>
+        Never delete the < > symbols or the words inside them.
+     4. Save the file (Ctrl+S), then refresh your browser to see it.
+
+     MAP OF THIS FILE (search for these markers to jump there):
+        [SECTION: PAGE SETUP]     - title, description for Google
+        [SECTION: DESIGN]         - colors and styling
+        [SECTION: MENU]           - top navigation bar
+        [SECTION: INTRO]          - "Hi, I'm Haresh Khumar" area
+        [SECTION: HOW I WORK]     - my four working habits
+        [SECTION: MY WORK AT SLB] - internship story tabs
+        [SECTION: MY PROJECTS]    - dashboards and video cards
+        [SECTION: SKILLS]         - skill chips
+        [SECTION: EDUCATION]      - degrees and school
+        [SECTION: QUICK FACTS]    - work eligibility info
+        [SECTION: DOCUMENTS]      - resume, letters, transcript
+        [SECTION: CONTACT]        - let's connect buttons
+        [SECTION: CHAT]           - the chat window
+        [SECTION: FUNCTIONALITY]  - technical code (be careful here)
+        [SECTION: EMBEDDED FILES] - photo/documents/video data
+                                    (NEVER edit this part)
+
+     GOLDEN RULES:
+        - Always keep a backup copy of this file before editing.
+        - Edit words, not symbols.
+        - If something breaks, restore your backup and try again.
+     **************************************************************** -->
+
+<html lang="en" data-theme="light">
+
+
+<!-- ================================================================
+     [SECTION: PAGE SETUP]
+     The website title and description that Google and LinkedIn show.
+     ================================================================ -->
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="NCOxGx06qnMWKVZKv9Pc3WnZsXndmnlVw3l59JUL89M">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haresh Khumar | Business & Data Analyst · Power BI, SQL, Python | Kuala Lumpur</title>
+<meta name="description" content="Haresh Khumar, Business & Data Analyst (Fresh Graduate) in Kuala Lumpur. SLB internship experience: Power BI dashboard across 40,000+ invoices, invoice automation 15% to 36%. Power BI, SQL, Python, SAP. Available immediately.">
+<meta name="keywords" content="Haresh Khumar, Business Analyst, Data Analyst, Power BI, SQL, Python, SAP, Kuala Lumpur, Malaysia, Fresh Graduate, Graduate Programme, Dashboard Developer">
+<meta name="author" content="Haresh Khumar">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://haresh-analyst.github.io/">
+<meta name="theme-color" content="#0E1B2C">
+<meta name="color-scheme" content="light dark">
+
+<!-- Open Graph (LinkedIn / Facebook preview) -->
+<meta property="og:title" content="Haresh Khumar | Business & Data Analyst">
+<meta property="og:description" content="Fresh graduate with SLB internship experience. Power BI dashboard across 40,000+ invoices; invoice automation 15% to 36%. Power BI · SQL · Python · SAP. Kuala Lumpur, available immediately.">
+<meta property="og:url" content="https://haresh-analyst.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://haresh-analyst.github.io/assets/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Haresh Khumar Portfolio">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Haresh Khumar | Business & Data Analyst">
+<meta name="twitter:description" content="Fresh graduate · Power BI, SQL, Python, SAP · SLB internship · Kuala Lumpur · Available immediately.">
+<meta name="twitter:image" content="https://haresh-analyst.github.io/assets/preview.png">
+
+<!-- Favicons -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Haresh Khumar",
+  "jobTitle": "Business & Data Analyst",
+  "address": {"@type": "PostalAddress", "addressLocality": "Kuala Lumpur", "addressCountry": "MY"},
+  "sameAs": ["https://www.linkedin.com/in/haresh-analyst"],
+  "url": "https://haresh-analyst.github.io/",
+  "knowsAbout": ["Power BI","SQL","Python","SAP","Excel","Data Analysis","Business Analysis","Dashboard Development"],
+  "alumniOf": {"@type": "CollegeOrUniversity", "name": "UNITAR International University"}
+}
+</script>
+
+<!-- Google Analytics 4 (active) -->
+<!-- Microsoft Clarity (active) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+
+<!-- ================================================================
+     [SECTION: DESIGN]
+     Colors and styling. To change the orange color, search for --amber.
+     ================================================================ -->
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="portfolio-booting">
+<!-- ================================================================
+     [SECTION: STARTUP LOADER]
+     The recruiter sees this screen while critical review assets are preparing.
+     The portfolio is revealed only after the critical review experience is ready.
+     ================================================================ -->
+<div id="bootLoader" role="status" aria-live="polite" aria-label="Portfolio loading">
+  <div class="boot-card">
+    <div class="boot-logo">HK<span>.</span></div>
+    <div class="boot-kicker">Portfolio preparation</div>
+    <div id="bootStatus">Preparing your portfolio…</div>
+    <div id="bootPercent">0%</div>
+    <div class="boot-track" aria-hidden="true"><span id="bootBar"></span></div>
+    <div id="bootDetail">Preparing the resources required for review…</div>
+    <div id="bootCount">0 of 0 resources ready</div>
+    <div id="bootEta">Calculating download speed…</div>
+    <div id="bootError" hidden><strong>Something needs attention.</strong><div id="bootErrorText"></div><button id="bootRetry" type="button">Retry loading</button></div>
+    <div class="boot-note">Please wait while the portfolio prepares itself. You will enter automatically when it is ready.</div>
+  </div>
+</div>
+
+<noscript><div style="background:#F5A623;color:#0E1B2C;padding:14px 20px;text-align:center;font-family:sans-serif;font-weight:600">This portfolio works best with JavaScript enabled. Contact me directly: haresh.analyst@gmail.com · +60 11-1106 3798 · linkedin.com/in/haresh-analyst</div></noscript>
+<a href="javascript:void(0)" onclick="goSec('about')" style="position:absolute;left:-9999px;top:0;background:var(--amber);color:#0E1B2C;padding:10px 16px;border-radius:8px;font-weight:700;z-index:999" onfocus="this.style.left='12px'" onblur="this.style.left='-9999px'">Skip to main content</a>
+
+
+
+<!-- ================================================================
+     [SECTION: MENU]
+     The bar at the top. Menu names can be edited between > and <.
+     ================================================================ -->
+<nav>
+  <div class="wrap nav-in">
+    <div class="logo" style="font-size:1.35rem;background:linear-gradient(135deg,var(--amber),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.03em">HK<span style="color:var(--amber)">.</span></div>
+    <div class="nav-links">
+      <a href="javascript:void(0)" onclick="goSec('about')">About Me</a>
+      <a href="javascript:void(0)" onclick="goSec('projects')">Projects</a>
+      <a href="javascript:void(0)" onclick="goSec('skills')">Skills</a>
+      <a href="javascript:void(0)" onclick="goSec('how')">How I Work</a>
+      <a href="javascript:void(0)" onclick="goSec('education')">Education</a>
+      <a href="javascript:void(0)" onclick="goSec('documents')">Documents</a>
+      <a href="javascript:void(0)" onclick="goSec('contact')">Contact</a>
+    </div>
+    <button class="theme-btn" id="themeToggle" aria-label="Switch between light and dark mode" aria-pressed="false">🌙 Dark Mode</button>
+  </div>
+</nav>
+
+<!-- HERO / ABOUT -->
+<main>
+
+
+<!-- ================================================================
+     [SECTION: INTRO]
+     Your name, headline, and the paragraph about your internship.
+     ================================================================ -->
+<header class="hero" id="about">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">IT · Business/Data Analyst (Fresh Graduate)</div>
+      <h1>Hi, I'm <span class="nm">Haresh Khumar</span>.</h1>
+      <h2 class="tag">I turn operational data into <em>decisions people can act on</em>.</h2>
+      <p class="lead">I completed a six-month Business Analyst internship with the Supply Chain Data Performance Team at SLB, a global energy technology company, based in their Kuala Lumpur hub. I connected and validated data from SAP, Ariba, SharePoint and Excel, built the Power BI dashboard management used to monitor invoice automation, and supported an initiative that raised automation from 15% to 36%.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="goSec('contact')">Let's Connect</a>
+        <a class="btn btn-dark" href="javascript:void(0)" onclick="goSec('projects')">See My Work</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img id="heroPhoto" src="" alt="Haresh Khumar, Business and Data Analyst" loading="eager" fetchpriority="high">
+      <div class="photo-badge">Available immediately · <b>Malaysian citizen</b></div>
+    </div>
+  </div>
+
+  <!-- signature mini dashboard -->
+  <div class="wrap">
+    <div class="dash rv" aria-label="Summary of my internship result">
+      <div class="kpis">
+        <div class="kpi"><div class="v" id="k1">40,453</div><div class="l">Invoices analysed</div></div>
+        <div class="kpi"><div class="v amb" id="k2">1,249</div><div class="l">Suppliers validated</div></div>
+        <div class="kpi"><div class="v rise" id="k3">36%</div><div class="l">Automation reached</div></div>
+      </div>
+      <div class="chartbox"><canvas id="trend" role="img" aria-label="Line chart: automated invoice processing rising from 15 percent in early 2025 to 36 percent in 2026"></canvas></div>
+      <div class="dash-cap">Share of supplier invoices processed automatically during my internship period · from 15% to 36%</div>
+    </div>
+  </div>
+</header>
+
+<!-- IMPACT BAND -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="band rv">
+      <div><div class="n" data-count="40000" data-suffix="+">0</div><div class="d">Invoices analysed</div></div>
+      <div><div class="n" data-count="1200" data-suffix="+">0</div><div class="d">Supplier records validated in SAP</div></div>
+      <div><div class="n g" data-count="21" data-prefix="+" data-suffix=" pts">0</div><div class="d">Rise in automation (15% → 36%)</div></div>
+      <div><div class="n" data-static="Adopted">0</div><div class="d">Solution handed into enterprise reporting</div></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: HOW I WORK]
+     Your four working habits.
+     ================================================================ -->
+
+<section id="how" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>How I Work</h2>
+      <p>Four habits I bring to every piece of work, whichever team or programme I'm in.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv"><div class="num">01</div><h3>Start with the question</h3><p>What decision does someone need to make? I work backwards from that, not forwards from the data.</p></div>
+      <div class="step rv"><div class="num">02</div><h3>Trust the data last</h3><p>Validate first. Numbers that haven't been checked aren't insights, they're rumours.</p></div>
+      <div class="step rv"><div class="num">03</div><h3>Make it usable</h3><p>If a manager can't act on it at a glance, it isn't finished. Clarity beats cleverness.</p></div>
+      <div class="step rv"><div class="num">04</div><h3>Leave it maintainable</h3><p>Documentation is part of the product. My work should run without me in the room.</p></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: MY WORK AT SLB]
+     The four story tabs about your internship.
+     ================================================================ -->
+
+<section>
+  <div class="wrap">
+    <div class="slb-layout">
+    <div>
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>My work at SLB</h2>
+      <p>SLB's supply chain moves essential items across the world so the right things reach the right place at the right time. Paying thousands of suppliers accurately, with minimal manual effort, is a critical part of that machine. Here is the part I worked on.</p>
+    </div>
+
+    <div class="tabs rv" role="tablist">
+      <button class="tab on" data-p="p1">The problem</button>
+      <button class="tab" data-p="p2">What I built</button>
+      <button class="tab" data-p="p3">Finding what to fix first</button>
+      <button class="tab" data-p="p4">Leaving it better</button>
+    </div>
+
+    <div class="panel on" id="p1">
+      <span class="pill">The starting point</span>
+      <p>Imagine thousands of supplier bills arriving every month. The best ones flow through the system automatically, no person needed. When I joined, only about 15 out of every 100 did that. The rest needed human hands, which is slow, repetitive, and expensive at scale.</p>
+      <p>A surprisingly common culprit? Tiny errors in supplier records, a bank detail here, a payment field there. One wrong entry and a bill falls out of the automatic flow.</p>
+    </div>
+    <div class="panel" id="p2">
+      <span class="pill">My contribution</span>
+      <p>Working within the Supply Chain Data Performance Team, I extracted and connected data from SAP, Ariba, SharePoint and Excel, validated and corrected master records for more than 1,200 suppliers, and designed an operational Power BI dashboard covering over 40,000 invoices, one screen where management could see instantly whether automation was genuinely improving, month by month.</p>
+      <p>By the end of my internship, 36 out of every 100 invoices flowed through automatically, up from 15. My dashboard is how the company saw and tracked that change.</p>
+    </div>
+    <div class="panel" id="p3">
+      <span class="pill">Root cause analysis</span>
+      <p>Invoices failed automation for many different reasons, and no team can fix everything at once. So I studied the failures, grouped them by cause, and ranked them by how many invoices each one blocked. That gave the team a clear answer to a simple question: if we can only fix three things this month, which three free up the most work?</p>
+    </div>
+    <div class="panel" id="p4">
+      <span class="pill">Documentation &amp; handover</span>
+      <p>A dashboard nobody understands dies the day its builder leaves. I wrote down every calculation, data source and business rule, and walked both business and technical stakeholders through it, so the solution could move into the company's enterprise reporting without being rebuilt from scratch.</p>
+      <p>I treat that as the finish line: my work should run perfectly well without me in the room.</p>
+    </div>
+    </div>
+
+    <div class="slb-figure rv" tabindex="0" aria-label="Video introduction of Haresh Khumar">
+      <canvas id="slbCanvas"></canvas>
+      <div class="slb-progress" aria-label="Video timeline">
+        <span id="slbCurrentTime">0:00</span>
+        <div class="slb-seek-wrap">
+          <input type="range" id="slbSeek" min="0" max="0" step="0.01" value="0" aria-label="Seek video">
+          <span class="slb-seek-tip" id="slbSeekTip">0:00</span>
+        </div>
+        <span id="slbDuration">0:00</span>
+      </div>
+      <div class="slb-ctrls">
+        <button class="slb-ctrl-btn" id="slbBackBtn" aria-label="Go back 10 seconds">↶</button>
+        <button class="slb-ctrl-btn" id="slbPlayBtn" aria-label="Play or pause">⏸</button>
+        <button class="slb-ctrl-btn" id="slbForwardBtn" aria-label="Go forward 10 seconds">↷</button>
+        <div class="slb-vol-wrap">
+          <button class="slb-ctrl-btn" id="slbMuteBtn" aria-label="Mute or unmute">🔇</button>
+          <div class="slb-vol"><input type="range" id="slbVolSlider" min="0" max="100" value="0" aria-label="Volume"></div>
+        </div>
+        <button class="slb-ctrl-btn" id="slbFsBtn" aria-label="Enlarge to full screen">⛶</button>
+      </div>
+      <button class="slb-darkmode-btn" id="slbDarkModeBtn" type="button">🌙 Watch in Dark Mode</button>
+    </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: MY PROJECTS]
+     The four project cards.
+     ================================================================ -->
+
+<section id="projects" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>Quick Overview of My Work</h2>
+      <p>Everything below opens right here on this page. Click, explore, close. The two dashboards are working copies of my internship project, rebuilt with sample data so nothing confidential is shown.</p>
+    </div>
+    <div class="proj-grid">
+      <div class="pcard rv">
+        <div class="ptag">Invoice Automation Performance Dashboard</div>
+        <h3>Guided View · for quick understanding</h3>
+        <p>I prepared multiple large sample datasets, then connected, validated, cleaned and analysed them to build this dashboard. Six short sections, each answering one practical question, from "how are we performing?" to "what should we fix first?".</p>
+        <div class="plinks">
+          <button class="plink" onclick="openDash('v3','Invoice Automation Performance Dashboard · Guided View')">▶ Click &amp; View Instantly</button>
+        </div>
+      </div>
+      <div class="pcard rv">
+        <div class="ptag">Invoice Automation Performance Dashboard</div>
+        <h3>Detailed View · for deeper analysis</h3>
+        <p>The analytical version: overall performance, root causes of manual processing, and which suppliers improved most, with channel-level filtering. Built on the same sample datasets, it shows how the analysis evolved before the guided redesign.</p>
+        <div class="plinks">
+          <button class="plink" onclick="openDash('v1','Invoice Automation Performance Dashboard · Detailed View')">▶ Click &amp; View Instantly</button>
+        </div>
+      </div>
+      <div class="pcard rv">
+        <div class="ptag">University Final Year Project</div>
+        <h3>Sales Forecasting Tool for Small Businesses</h3>
+        <p>A tool I built that predicts future sales so a shop owner knows how much stock to prepare. Every prediction comes with an honest "how sure are we?" range, because a forecast you can't trust is worse than none.</p>
+        <div class="plinks">
+          <button class="plink" onclick="openVideo()">▶ Watch the 3-minute demo</button>
+          
+        </div>
+      </div>
+      <div class="pcard rv">
+        <div class="ptag">Behind the scenes</div>
+        <h3>How it was built, and proof it happened</h3>
+        <p>The real version ran in Power BI on live company data: SAP record checks, carefully designed measures, and step-by-step documentation so the next person can run everything without me. My official completion letter from SLB is right here.</p>
+        <div class="plinks">
+          <button class="plink" onclick="openDoc('slb')">View my SLB completion letter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: SKILLS]
+     Your skill chips. Copy a whole <span class="chip">...</span> line to add one.
+     ================================================================ -->
+
+<section id="skills" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>Skills</h2>
+    </div>
+    <div class="skill-grid">
+      <div class="scard rv"><h3>📊 Data &amp; Reporting</h3><div class="chip-row">
+        <span class="chip">Microsoft Excel</span><span class="chip">Power BI</span><span class="chip">SQL</span>
+        <span class="chip">SAP data validation</span><span class="chip">KPI design &amp; tracking</span><span class="chip">Dashboard design &amp; development</span>
+      </div></div>
+      <div class="scard rv"><h3>🧠 Analytics &amp; Tools</h3><div class="chip-row">
+        <span class="chip">Python (pandas, forecasting)</span><span class="chip">SQL data extraction</span>
+        <span class="chip">Power Query</span><span class="chip">DAX</span><span class="chip">Root cause analysis</span>
+      </div></div>
+      <div class="scard rv"><h3>🤝 Business Skills</h3><div class="chip-row">
+        <span class="chip">Requirements gathering</span><span class="chip">Stakeholder management</span>
+        <span class="chip">Data storytelling</span><span class="chip">Technical documentation</span><span class="chip">Knowledge transfer</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- ================================================================
+     [SECTION: EDUCATION]
+     Your degrees. Copy a whole erow block to add a certification.
+     ================================================================ -->
+
+<section id="education" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>Education</h2>
+    </div>
+    <div class="erow rv">
+      <div><h3>Bachelor of Information Technology (Hons), Data Analytics<span class="badge">First Class Honours · CGPA 3.67</span></h3><p>UNITAR International University, Petaling Jaya · Completed 2026</p></div>
+      <div class="r">Jun 2026</div>
+    </div>
+    <div class="erow rv">
+      <div><h3>Diploma in Information Technology</h3><p>Tunku Abdul Rahman University of Management &amp; Technology</p></div>
+      <div class="r">Jun 2022</div>
+    </div>
+    <div class="erow rv">
+      <div><h3>Sijil Pelajaran Malaysia (SPM)</h3><p>SMK Hillcrest</p></div>
+      <div class="r">Dec 2019</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: QUICK FACTS]
+     Work eligibility chips and your reliability statement.
+     ================================================================ -->
+
+<section id="goodtoknow" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>Work Eligibility &amp; Quick Facts</h2>
+      <p>The practical questions, answered upfront.</p>
+    </div>
+    <div class="chip-row rv" style="gap:10px">
+      <span class="chip">🇲🇾 Malaysian citizen, born in Malaysia</span>
+      <span class="chip">📍 Based in Kuala Lumpur</span>
+      <span class="chip">✅ Full legal right to work in Malaysia</span>
+      <span class="chip">⚡ Available to start immediately</span>
+      <span class="chip">🗣️ English · Malay · Tamil</span>
+      <span class="chip">🚗 Own transport · valid driving licence</span>
+      <span class="chip">💪 Medically fit, no health issues</span>
+      <span class="chip">📜 Open to professional certifications</span>
+      <span class="chip">👤 Male</span>
+    </div>
+    <div class="card rv" style="margin-top:16px">
+      <p>I believe reliability is one of my strengths. I'm someone people can count on to take ownership of my responsibilities and follow through on my commitments. I prefer to understand work thoroughly, collaborate closely with the team, and make sure tasks are completed carefully and to a high standard.</p>
+      <p style="margin-bottom:0">I genuinely enjoy working in a team, discussing ideas, sharing knowledge and learning from teammates, because the best results come from strong collaboration. I'm open to feedback and different perspectives, I respect the processes a team already has while staying open to continuous improvement, and when challenges arise I focus on practical solutions rather than dwelling on problems. My goal is simple: communicate clearly and consistently deliver reliable, high-quality work.</p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: DOCUMENTS]
+     The four document cards.
+     ================================================================ -->
+
+<section id="documents" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="rule"></div>
+      <h2>My Documents</h2>
+      <p>Everything opens right here, view, highlight and copy freely. All issued in 2026.</p>
+    </div>
+    <div class="doc-grid">
+      <button class="doc rv" onclick="openDoc('resume')"><div class="ic">📄</div><h3>Resume</h3><p>One page</p><span class="doc-btn">View Instantly</span></button>
+      <button class="doc rv" onclick="openDoc('cover')"><div class="ic">✉️</div><h3>Cover Letter</h3><p>One page</p><span class="doc-btn">View Instantly</span></button>
+      <button class="doc rv" onclick="openDoc('slb')"><div class="ic">🏢</div><h3>SLB Completion Letter</h3><p>Official · Jul 2026</p><span class="doc-btn">View Instantly</span></button>
+      <button class="doc rv" onclick="openDoc('transcript')"><div class="ic">🎓</div><h3>Bachelor Transcript</h3><p>Full record · 2026</p><span class="doc-btn">View Instantly</span></button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ================================================================
+     [SECTION: CONTACT]
+     The Let's connect box. Phone/email are also in FUNCTIONALITY below.
+     ================================================================ -->
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card rv">
+      <h2>Let's connect.</h2>
+      <p>If anything here felt useful, I'd genuinely love to hear from you, about a role, a programme, or even just advice. Any channel works, and I reply quickly.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-primary" href="https://wa.me/601111063798" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/haresh-analyst" target="_blank" rel="noopener">in LinkedIn</a>
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openContact('email')">✉ Email</a>
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openContact('call')">📞 Call</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>Thank you for reading this far, that already means a lot. If something here felt right for your team, <a href="javascript:void(0)" onclick="openConnect()" style="color:var(--teal);font-weight:600">let's connect</a>. · © 2026 Haresh Khumar</footer>
+
+
+
+<!-- ================================================================
+     [SECTION: CHAT]
+     The chat window structure. Chat ANSWERS live in FUNCTIONALITY.
+     ================================================================ -->
+
+<button class="chat-fab" id="chatFab" aria-label="Open assistant">💬 Hi, Let's Chat</button>
+<div class="chat-box" id="chatBox" role="dialog" aria-label="Assistant chat">
+  <div class="chat-head">
+    <div><div class="t">Haresh Khumar</div><div class="s">Usually replies instantly · your details stay in this browser</div></div>
+    <button class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-label="Chat conversation"></div>
+  <div class="chat-in">
+    <input type="text" id="chatInput" placeholder="Type here..." aria-label="Type your message">
+    <button id="chatSend">Send</button>
+  </div>
+</div>
+
+
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true">
+  <div class="viewer-in">
+    <div class="viewer-bar"><div class="vt" id="viewerTitle">Viewer</div>
+      <div style="display:flex;gap:8px"><button class="viewer-close" id="copyDocBtn" style="display:none" onclick="copyDocText(this)">📋 Copy text</button><button class="viewer-close" onclick="closeViewer()">✕ Close</button></div></div>
+    <div class="viewer-body" id="viewerBody"></div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     [SECTION: EMBEDDED FILES]
+     Asset references are kept in config/site-data.js. Binary files live in the assets/ folder.
+     ================================================================ -->
+
+
+
+
+
+
+
+
+<!-- ================================================================
+     [SECTION: JAVASCRIPT]
+     Settings → analytics → startup loader → main functionality.
+     ================================================================ -->
+<script src="config/site-config.js"></script>
+<script src="config/site-data.js"></script>
+<script>window.Chart=function(){return {}}; window.Chart.register=function(){};</script>
+<script src="js/main.js"></script>
+</body></html>

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Automation Performance Dashboard | Haresh Khumar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --surface3: #1e2d42;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8edf5;
+    --muted: #6b7a99;
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.12);
+    --accent: #6366f1;
+    --accent-dim: rgba(99,102,241,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .header h1 { font-size: 16px; font-weight: 600; color: var(--text); }
+  .header-right { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* FILTERS */
+  .filters-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .filter-label { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 28px 6px 10px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7a99' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    min-width: 140px;
+  }
+  select:hover { border-color: var(--accent); }
+  .filter-reset {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* MAIN */
+  .main { padding: 24px 32px; max-width: 1600px; margin: 0 auto; }
+
+  /* SECTION */
+  .section { margin-bottom: 32px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .section-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .section-sub { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* GRID */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-21 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .grid-12 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+
+  /* KPI CARD */
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-1px); }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 8px; }
+  .kpi-value { font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .kpi-sub { font-size: 11px; color: var(--muted); }
+  .kpi-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .badge-green { background: var(--green-dim); color: var(--green); }
+  .badge-red { background: var(--red-dim); color: var(--red); }
+  .badge-amber { background: var(--amber-dim); color: var(--amber); }
+  .badge-blue { background: var(--blue-dim); color: var(--blue); }
+  .kpi-accent-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .card-sub { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+  .chart-wrap { position: relative; }
+
+  /* INSIGHT BOX */
+  .insight-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 16px;
+  }
+  .insight-box.red { border-left-color: var(--red); }
+  .insight-box.green { border-left-color: var(--green); }
+  .insight-box.amber { border-left-color: var(--amber); }
+  .insight-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 6px; }
+  .insight-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  th:hover { color: var(--text); }
+  td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .td-name { font-weight: 500; color: var(--text); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .td-num { font-family: 'DM Mono', monospace; color: var(--muted); }
+  .td-num-red { font-family: 'DM Mono', monospace; color: var(--red); font-weight: 600; }
+  .td-num-green { font-family: 'DM Mono', monospace; color: var(--green); font-weight: 600; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .progress-bar { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; min-width: 60px; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  .progress-label { font-family: 'DM Mono', monospace; font-size: 11px; min-width: 45px; text-align: right; }
+
+  /* CHANNEL BAR */
+  .channel-row { margin-bottom: 14px; }
+  .channel-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .channel-name { font-size: 13px; font-weight: 500; }
+  .channel-stats { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .channel-bar { height: 8px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+  .channel-fill { height: 100%; border-radius: 4px; }
+
+  /* PRIORITY BADGE */
+  .priority { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  .priority-high { background: var(--red-dim); color: var(--red); }
+  .priority-med { background: var(--amber-dim); color: var(--amber); }
+  .priority-low { background: var(--green-dim); color: var(--green); }
+
+  /* ACTION TAG */
+  .action-tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; background: var(--accent-dim); color: var(--accent); margin: 1px; }
+
+  /* CHANNEL PILL */
+  .ch-pill { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .ch-ariba { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .ch-email { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .ch-other { background: rgba(107,114,153,0.15); color: var(--muted); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+  .tab { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid transparent; color: var(--muted); transition: all 0.2s; }
+  .tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
+
+  /* PAGINATION */
+  .pagination { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .page-btn { padding: 4px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; color: var(--muted); font-size: 12px; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .page-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  /* DRILLDOWN */
+  .drilldown-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 0 0 10px 10px;
+    padding: 16px;
+    display: none;
+  }
+  .drilldown-panel.open { display: block; }
+  .drilldown-title { font-size: 12px; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; justify-content: space-between; }
+  .drilldown-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .dd-stat { background: var(--surface); border-radius: 8px; padding: 12px; }
+  .dd-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .dd-stat-value { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2,1fr); }
+    .grid-3 { grid-template-columns: repeat(2,1fr); }
+    .grid-21, .grid-12 { grid-template-columns: 1fr; }
+    .main { padding: 16px; }
+    .filters-bar { padding: 10px 16px; }
+    .header { padding: 12px 16px; }
+  }
+  @media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span class="logo-badge">Team</span>
+    <h1>Invoice Automation Performance Dashboard</h1>
+  </div>
+  <div class="header-right">
+    <div class="live-dot"></div>
+    <span>Dataset: Jan 2025 – Jan 2026 &nbsp;·&nbsp; 33,070 invoices</span>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <span class="filter-label">Filter by</span>
+  <select id="f-month" onchange="applyFilters()">
+    <option value="">All Months</option>
+    <option value="2025-01">Jan 2025</option>
+    <option value="2025-02">Feb 2025</option>
+    <option value="2025-03">Mar 2025</option>
+    <option value="2025-04">Apr 2025</option>
+    <option value="2025-05">May 2025</option>
+    <option value="2025-06">Jun 2025</option>
+    <option value="2025-07">Jul 2025</option>
+    <option value="2025-08">Aug 2025</option>
+    <option value="2025-09">Sep 2025</option>
+    <option value="2025-10">Oct 2025</option>
+    <option value="2025-11">Nov 2025</option>
+    <option value="2025-12">Dec 2025</option>
+    <option value="2026-01">Jan 2026</option>
+  </select>
+  <select id="f-channel" onchange="applyFilters()">
+    <option value="">All Channels</option>
+    <option value="ARIBA">ARIBA</option>
+    <option value="EMAIL_CORP">EMAIL_CORP</option>
+    <option value="EXCEL">EXCEL</option>
+    <option value="MSP_UPLOAD">MSP_UPLOAD</option>
+    <option value="PYMNTRQST">PYMNTRQST</option>
+    <option value="SCAN_CTR">SCAN_CTR</option>
+  </select>
+  <select id="f-vendor" onchange="applyFilters()">
+    <option value="">All Vendors</option>
+  </select>
+  <button class="filter-reset" onclick="resetFilters()">↺ Reset</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- SECTION 1: EXECUTIVE OVERVIEW -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Executive Overview</span>
+      <span class="section-sub">Overall Invoice Automation performance at a glance</span>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:16px;">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Invoices</div>
+        <div class="kpi-value" id="kpi-total" style="color:var(--text);">33,070</div>
+        <div class="kpi-sub">Jan 2025 – Jan 2026</div>
+        <div class="kpi-accent-line" style="background:var(--blue);"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Touchless Invoices</div>
+        <div class="kpi-value" id="kpi-touchless" style="color:var(--green);">6,846</div>
+        <div class="kpi-sub" id="kpi-touchless-sub">Auto-processed without manual touch</div>
+        <span class="kpi-badge badge-green" id="kpi-trate">20.70%</span>
+        <div class="kpi-accent-line" style="background:var(--green);"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Manual Invoices</div>
+        <div class="kpi-value" id="kpi-manual" style="color:var(--red);">26,224</div>
+        <div class="kpi-sub" id="kpi-manual-sub">Require human intervention</div>
+        <span class="kpi-badge badge-red" id="kpi-mrate">79.30%</span>
+        <div class="kpi-accent-line" style="background:var(--red);"></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Latest Month Rate</div>
+        <div class="kpi-value" style="color:var(--green);">37.26%</div>
+        <div class="kpi-sub">Jan 2026 — Best month recorded</div>
+        <span class="kpi-badge badge-green">↑ +22.35pp</span>
+        <div class="kpi-accent-line" style="background:var(--accent);"></div>
+      </div>
+    </div>
+
+    <div class="grid-21">
+      <div class="card">
+        <div class="card-title">Monthly Touchless Rate Trend</div>
+        <div class="card-sub">% of invoices processed touchless per month</div>
+        <div class="chart-wrap"><canvas id="chart-trend" height="90"></canvas></div>
+        <div class="insight-box green" style="margin-top:14px;">
+          <div class="insight-title">📈 Trend Insight</div>
+          <div class="insight-text">Touchless rate has improved significantly from <strong>14.91%</strong> in Jan 2025 to <strong>37.26%</strong> in Jan 2026 — a <strong>+22.35 percentage point</strong> improvement. The inflection accelerated from Aug 2025 onward, suggesting process/system changes are taking effect. Continued momentum is critical.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Touchless vs Manual Split</div>
+        <div class="card-sub">Overall invoice processing distribution</div>
+        <div class="chart-wrap" style="display:flex;justify-content:center;"><canvas id="chart-donut" width="220" height="220"></canvas></div>
+        <div style="display:flex;justify-content:center;gap:24px;margin-top:12px;font-size:12px;">
+          <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;"></span>Touchless 20.70%</span>
+          <span style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--red);display:inline-block;"></span>Manual 79.30%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: PROBLEM IDENTIFICATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Problem Identification</span>
+      <span class="section-sub">Where is the manual workload concentrated?</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Manual Invoices by Channel</div>
+        <div class="card-sub">Volume of non-touchless invoices per submission channel</div>
+        <div id="channel-bars"></div>
+        <div class="insight-box red">
+          <div class="insight-title">⚠️ Channel Problem</div>
+          <div class="insight-text"><strong>EMAIL_CORP drives 57.1% of all manual invoices</strong> (14,969 invoices) with only a 7.24% touchless rate — the lowest among active channels. EXCEL and PYMNTRQST have 0% touchless. Transitioning EMAIL vendors to ARIBA is the highest-leverage intervention.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Touchless Rate by Channel</div>
+        <div class="card-sub">Automation performance per channel</div>
+        <div class="chart-wrap"><canvas id="chart-channel-rate" height="180"></canvas></div>
+        <div class="insight-box amber">
+          <div class="insight-title">💡 Channel Benchmark</div>
+          <div class="insight-text">ARIBA achieves <strong>34.63% touchless</strong> — nearly 5× better than EMAIL_CORP (7.24%). This confirms that channel migration is the primary lever for improvement. MSP_UPLOAD shows moderate performance at 24.28%.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: ROOT CAUSE ANALYSIS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Root Cause Analysis</span>
+      <span class="section-sub">Why is manual processing occurring?</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Exception Reason Distribution</div>
+        <div class="card-sub">Documented causes of processing exceptions</div>
+        <div style="margin-top:8px;">
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name">Posting Errors Exist (PO)</span>
+              <span class="channel-stats">341 &nbsp;|&nbsp; 97.14%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:97.14%;background:var(--red);"></div></div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name">Posting Errors Exist (NPO)</span>
+              <span class="channel-stats">8 &nbsp;|&nbsp; 2.28%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:2.28%;background:var(--amber);"></div></div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name">Invoice Quantity Check (PO)</span>
+              <span class="channel-stats">1 &nbsp;|&nbsp; 0.28%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:0.28%;background:var(--blue);"></div></div>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:var(--red-dim);border-radius:8px;border:1px solid rgba(239,68,68,0.2);">
+            <div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">⚠️ Data Quality Gap</div>
+            <div style="font-size:13px;margin-top:6px;color:var(--text);">Only <strong>350 out of 26,224 manual invoices</strong> (1.34%) have a documented exception reason. <strong>98.66% have no exception reason recorded</strong> — this is a significant data quality gap limiting root cause analysis.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Payment Block Key Analysis</div>
+        <div class="card-sub">Invoices with active payment blocks</div>
+        <div style="margin-top:8px;">
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name" style="display:flex;align-items:center;gap:8px;"><span style="font-family:'DM Mono',monospace;background:var(--red-dim);color:var(--red);padding:2px 7px;border-radius:4px;font-size:12px;">R</span> Free for Payment</span>
+              <span class="channel-stats">300 &nbsp;|&nbsp; 80.86%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:80.86%;background:var(--red);"></div></div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name" style="display:flex;align-items:center;gap:8px;"><span style="font-family:'DM Mono',monospace;background:var(--amber-dim);color:var(--amber);padding:2px 7px;border-radius:4px;font-size:12px;">A</span> Blocked for Payment</span>
+              <span class="channel-stats">49 &nbsp;|&nbsp; 13.21%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:13.21%;background:var(--amber);"></div></div>
+          </div>
+          <div class="channel-row">
+            <div class="channel-top">
+              <span class="channel-name" style="display:flex;align-items:center;gap:8px;"><span style="font-family:'DM Mono',monospace;background:var(--blue-dim);color:var(--blue);padding:2px 7px;border-radius:4px;font-size:12px;">D</span> Skip Account</span>
+              <span class="channel-stats">21 &nbsp;|&nbsp; 5.66%</span>
+            </div>
+            <div class="channel-bar"><div class="channel-fill" style="width:5.66%;background:var(--blue);"></div></div>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:var(--amber-dim);border-radius:8px;border:1px solid rgba(245,158,11,0.2);">
+            <div style="font-size:11px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">📌 Note</div>
+            <div style="font-size:13px;margin-top:6px;color:var(--text);">370 invoices (1.12%) carry active payment blocks. Block <strong>R</strong> (dominant) typically indicates a resolved block retained on record — validate if these are being cleared correctly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Root Cause Summary</div>
+        <div class="card-sub">Structured diagnosis of processing failures</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--red);">
+            <div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:5px;">ROOT CAUSE 1 · Channel Dependency</div>
+            <div style="font-size:12px;color:var(--text);">48.8% of invoices come via EMAIL_CORP with only 7.24% touchless. Unstructured email submissions bypass automation logic.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--amber);">
+            <div style="font-size:11px;color:var(--amber);font-weight:700;margin-bottom:5px;">ROOT CAUSE 2 · Missing Exception Data</div>
+            <div style="font-size:12px;color:var(--text);">98.66% of manual invoices lack exception codes. Without this data, automated routing and escalation rules cannot fire.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--blue);">
+            <div style="font-size:11px;color:var(--blue);font-weight:700;margin-bottom:5px;">ROOT CAUSE 3 · Vendor Master Gaps</div>
+            <div style="font-size:12px;color:var(--text);">Several high-volume vendors show near-0% touchless despite ARIBA enrollment — suggesting invalid IDs, PO mismatches, or incomplete vendor master data.</div>
+          </div>
+          <div style="padding:12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--accent);">
+            <div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:5px;">ROOT CAUSE 4 · Posting Errors</div>
+            <div style="font-size:12px;color:var(--text);">PO posting errors account for 97% of documented exceptions. These stem from price/qty discrepancies and invalid requester IDs at invoice submission.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: SUPPLIER ANALYSIS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Supplier Analysis</span>
+      <span class="section-sub">Which vendors are driving manual workload?</span>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div class="card-title">Supplier Performance Table</div>
+          <div class="card-sub">Sorted by manual invoice count (descending) · Click row to drill down</div>
+        </div>
+        <div class="tabs" id="supplier-tabs">
+          <div class="tab active" onclick="setSupTab('all',this)">All</div>
+          <div class="tab" onclick="setSupTab('ariba',this)">ARIBA</div>
+          <div class="tab" onclick="setSupTab('email',this)">EMAIL_CORP</div>
+          <div class="tab" onclick="setSupTab('critical',this)">Critical (&lt;10%)</div>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table id="supplier-table">
+          <thead>
+            <tr>
+              <th onclick="sortSupplier('name')">Supplier ↕</th>
+              <th onclick="sortSupplier('total')">Total ↕</th>
+              <th onclick="sortSupplier('manual')">Manual ↕</th>
+              <th onclick="sortSupplier('touchless_pct')">Touchless % ↕</th>
+              <th>Rate Visual</th>
+              <th onclick="sortSupplier('channel')">Channel ↕</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody id="supplier-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="sup-pagination"></div>
+      <div id="drilldown-panel" class="drilldown-panel">
+        <div class="drilldown-title">
+          <span id="dd-title">Vendor Detail</span>
+          <span style="cursor:pointer;color:var(--muted);" onclick="closeDrilldown()">✕ Close</span>
+        </div>
+        <div class="drilldown-grid" id="dd-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: ACTION & PRIORITIZATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Action & Prioritization</span>
+      <span class="section-sub">Operations Team (Team) recommended actions</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Vendor Risk & Action Matrix</div>
+      <div class="card-sub">Priority = High Manual Volume + Low Touchless % · Focus Team engagement here first</div>
+      <div class="tbl-wrap" style="margin-top:12px;">
+        <table id="action-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Supplier</th>
+              <th>Manual</th>
+              <th>Touchless %</th>
+              <th>Channel</th>
+              <th>Priority</th>
+              <th>Recommended Actions</th>
+            </tr>
+          </thead>
+          <tbody id="action-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="insight-box" style="margin-top:0;border-left-color:var(--red);">
+        <div class="insight-title">🔴 High Priority (Manual &gt;500, &lt;10% Touchless)</div>
+        <div class="insight-text">Immediate Team clinic required. Root cause typically: EMAIL channel usage, invalid vendor master data, or missing PO references. Target: Ariba migration + data cleanse within 30 days.</div>
+      </div>
+      <div class="insight-box" style="margin-top:0;border-left-color:var(--amber);">
+        <div class="insight-title">🟡 Medium Priority (Manual 200–500 or 10–30% Touchless)</div>
+        <div class="insight-text">Schedule structured onboarding review. Validate PO matching rules, payment terms in vendor master, and submission format compliance. Target improvement within 60 days.</div>
+      </div>
+      <div class="insight-box green" style="margin-top:0;">
+        <div class="insight-title">🟢 Low Priority (&gt;30% Touchless)</div>
+        <div class="insight-text">Maintain performance. Monitor for regression. Use as benchmark for Team best-practice sharing with High/Medium priority vendors. Recognize in supplier scorecards.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script>
+// ========================
+// RAW DATA
+// ========================
+const RAW_DATA = {
+  monthly: [
+    {m:'2025-01',total:2844,touchless:424,manual:2420,rate:14.91},
+    {m:'2025-02',total:2523,touchless:421,manual:2102,rate:16.69},
+    {m:'2025-03',total:2994,touchless:495,manual:2499,rate:16.53},
+    {m:'2025-04',total:2736,touchless:409,manual:2327,rate:14.95},
+    {m:'2025-05',total:2583,touchless:391,manual:2192,rate:15.14},
+    {m:'2025-06',total:2451,touchless:378,manual:2073,rate:15.42},
+    {m:'2025-07',total:2572,touchless:396,manual:2176,rate:15.40},
+    {m:'2025-08',total:2243,touchless:451,manual:1792,rate:20.11},
+    {m:'2025-09',total:2308,touchless:465,manual:1843,rate:20.15},
+    {m:'2025-10',total:2698,touchless:636,manual:2062,rate:23.57},
+    {m:'2025-11',total:2510,touchless:756,manual:1754,rate:30.12},
+    {m:'2025-12',total:2509,touchless:842,manual:1667,rate:33.56},
+    {m:'2026-01',total:2099,touchless:782,manual:1317,rate:37.26}
+  ],
+  channels: [
+    {ch:'ARIBA',total:16251,touchless:5628,manual:10623,rate:34.63},
+    {ch:'EMAIL_CORP',total:16138,touchless:1169,manual:14969,rate:7.24},
+    {ch:'EXCEL',total:340,touchless:0,manual:340,rate:0.00},
+    {ch:'MSP_UPLOAD',total:173,touchless:42,manual:131,rate:24.28},
+    {ch:'PYMNTRQST',total:104,touchless:0,manual:104,rate:0.00},
+    {ch:'SCAN_CTR',total:64,touchless:7,manual:57,rate:10.94}
+  ],
+  suppliers: [
+    {name:'ZKH INDUSTRIAL SUPPLY CO LTD',total:2612,manual:2612,touchless:0,rate:0.00,ch:'ARIBA'},
+    {name:'SHANGHAI ROCKWAY PRECISION',total:1994,manual:1993,touchless:1,rate:0.05,ch:'EMAIL_CORP'},
+    {name:'KENNAMETAL INC',total:2288,manual:1338,touchless:950,rate:41.52,ch:'EMAIL_CORP'},
+    {name:'INFOSYS LIMITED',total:988,manual:973,touchless:15,rate:1.52,ch:'EMAIL_CORP'},
+    {name:'GEMAK SA DE CV',total:1023,manual:727,touchless:296,rate:28.93,ch:'EMAIL_CORP'},
+    {name:'Economy Polymers & Chemicals',total:981,manual:720,touchless:261,rate:26.61,ch:'EMAIL_CORP'},
+    {name:'TETRA TECHNOLOGIES INC',total:717,manual:716,touchless:1,rate:0.14,ch:'ARIBA'},
+    {name:'TOP SERVICE FOR Engineering and Tra',total:968,manual:686,touchless:282,rate:29.13,ch:'ARIBA'},
+    {name:'MANUJ DUTTA',total:844,manual:626,touchless:218,rate:25.83,ch:'EMAIL_CORP'},
+    {name:'BLUE LINE INDUSTRIES - SOLE',total:755,manual:569,touchless:186,rate:24.64,ch:'EMAIL_CORP'},
+    {name:'Colipu Technologies Group Co., Ltd.',total:560,manual:560,touchless:0,rate:0.00,ch:'EMAIL_CORP'},
+    {name:'DATANGOLA,LDA',total:647,manual:472,touchless:175,rate:27.05,ch:'EMAIL_CORP'},
+    {name:'SPEEDCAST COMMUNICATIONS, INC.',total:575,manual:458,touchless:117,rate:20.35,ch:'ARIBA'},
+    {name:'NES GLOBAL TECHNICAL CONSULTANTS',total:537,manual:430,touchless:107,rate:19.93,ch:'ARIBA'},
+    {name:'KAILASH ENTERPRISES',total:427,manual:405,touchless:22,rate:5.15,ch:'EMAIL_CORP'},
+    {name:'T & S MACHINE CO INC',total:497,manual:390,touchless:107,rate:21.53,ch:'EMAIL_CORP'},
+    {name:'YASH TECHNOLOGIES PVT LTD',total:553,manual:388,touchless:165,rate:29.84,ch:'ARIBA'},
+    {name:'AZIM FOR TRADING AND INVESTMENT',total:625,manual:387,touchless:238,rate:38.08,ch:'ARIBA'},
+    {name:'BlackHawk Industrial Distribution,I',total:379,manual:379,touchless:0,rate:0.00,ch:'ARIBA'},
+    {name:'OLYMPIAN MACHINE',total:407,manual:325,touchless:82,rate:20.15,ch:'ARIBA'}
+  ]
+};
+
+// Recommended actions logic
+function getActions(s) {
+  const acts = [];
+  if(s.rate < 5 && s.ch !== 'ARIBA') acts.push('Migrate to ARIBA');
+  if(s.rate < 5 && s.ch === 'ARIBA') acts.push('Fix Vendor Master Data');
+  if(s.rate < 15) acts.push('Team Clinic Session');
+  if(s.rate < 15) acts.push('Resolve Validation Rules');
+  if(s.ch === 'EMAIL_CORP') acts.push('Ariba Onboarding');
+  if(s.ch === 'EXCEL' || s.ch === 'SCAN_CTR') acts.push('Channel Upgrade');
+  if(s.rate >= 15 && s.rate < 30) acts.push('PO Matching Review');
+  if(s.rate >= 30) acts.push('Maintain & Monitor');
+  return [...new Set(acts)].slice(0,3);
+}
+
+function getPriority(s) {
+  if(s.manual > 400 && s.rate < 10) return 'high';
+  if(s.manual > 200 || (s.rate < 30 && s.manual > 100)) return 'med';
+  return 'low';
+}
+
+// ========================
+// STATE
+// ========================
+let filteredSuppliers = [...RAW_DATA.suppliers];
+let supPage = 0;
+const SUP_PAGE_SIZE = 10;
+let supSortCol = 'manual';
+let supSortDir = -1;
+let activeSupTab = 'all';
+
+// ========================
+// CHARTS
+// ========================
+let chartTrend, chartDonut, chartChannelRate;
+
+function initCharts() {
+  Chart.defaults.color = '#6b7a99';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+  // Trend
+  const tCtx = document.getElementById('chart-trend').getContext('2d');
+  const gradient = tCtx.createLinearGradient(0,0,0,200);
+  gradient.addColorStop(0,'rgba(34,197,94,0.25)');
+  gradient.addColorStop(1,'rgba(34,197,94,0)');
+  chartTrend = new Chart(tCtx,{
+    type:'line',
+    data:{
+      labels: RAW_DATA.monthly.map(d=>d.m.replace('202','')),
+      datasets:[{
+        label:'Touchless %',
+        data: RAW_DATA.monthly.map(d=>d.rate),
+        borderColor:'#22c55e',
+        backgroundColor: gradient,
+        fill:true,
+        tension:0.4,
+        pointRadius:4,
+        pointBackgroundColor:'#22c55e',
+        borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}%`}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{font:{size:10}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:{size:10}},min:0,max:45}
+      }
+    }
+  });
+
+  // Donut
+  const dCtx = document.getElementById('chart-donut').getContext('2d');
+  chartDonut = new Chart(dCtx,{
+    type:'doughnut',
+    data:{
+      labels:['Touchless','Manual'],
+      datasets:[{
+        data:[6846,26224],
+        backgroundColor:['#22c55e','#ef4444'],
+        borderWidth:0,
+        hoverOffset:6
+      }]
+    },
+    options:{
+      responsive:false,
+      cutout:'70%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw.toLocaleString()}`}}}
+    }
+  });
+
+  // Channel rate bar
+  const cCtx = document.getElementById('chart-channel-rate').getContext('2d');
+  chartChannelRate = new Chart(cCtx,{
+    type:'bar',
+    data:{
+      labels: RAW_DATA.channels.map(d=>d.ch),
+      datasets:[{
+        label:'Touchless %',
+        data: RAW_DATA.channels.map(d=>d.rate),
+        backgroundColor: RAW_DATA.channels.map(d=> d.rate > 30 ? 'rgba(34,197,94,0.7)' : d.rate > 15 ? 'rgba(245,158,11,0.7)' : 'rgba(239,68,68,0.7)'),
+        borderRadius:5,
+        borderWidth:0
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}%`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%',font:{size:10}},max:45}
+      }
+    }
+  });
+}
+
+// Channel bars render
+function renderChannelBars() {
+  const maxManual = Math.max(...RAW_DATA.channels.map(d=>d.manual));
+  const div = document.getElementById('channel-bars');
+  div.innerHTML = RAW_DATA.channels.map(d=>{
+    const pct = (d.manual/maxManual*100).toFixed(1);
+    const cl = d.ch==='ARIBA' ? '#3b82f6' : d.ch==='EMAIL_CORP'? '#ef4444' : '#6b7a99';
+    const pill = d.ch==='ARIBA'?'ch-ariba':d.ch==='EMAIL_CORP'?'ch-email':'ch-other';
+    return `<div class="channel-row">
+      <div class="channel-top">
+        <span class="channel-name"><span class="ch-pill ${pill}">${d.ch}</span></span>
+        <span class="channel-stats">${d.manual.toLocaleString()} manual</span>
+      </div>
+      <div class="channel-bar"><div class="channel-fill" style="width:${pct}%;background:${cl};"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ========================
+// SUPPLIER TABLE
+// ========================
+function renderSupplierTable() {
+  let data = [...filteredSuppliers];
+
+  // Tab filter
+  if(activeSupTab==='ariba') data = data.filter(s=>s.ch==='ARIBA');
+  else if(activeSupTab==='email') data = data.filter(s=>s.ch==='EMAIL_CORP');
+  else if(activeSupTab==='critical') data = data.filter(s=>s.rate<10);
+
+  // Sort
+  data.sort((a,b)=>{
+    const av = a[supSortCol]||0, bv = b[supSortCol]||0;
+    if(typeof av==='string') return supSortDir*(av.localeCompare(bv));
+    return supSortDir*(av-bv);
+  });
+
+  const total = data.length;
+  const pages = Math.ceil(total/SUP_PAGE_SIZE);
+  const slice = data.slice(supPage*SUP_PAGE_SIZE, (supPage+1)*SUP_PAGE_SIZE);
+
+  const tbody = document.getElementById('supplier-tbody');
+  tbody.innerHTML = slice.map((s,i)=>{
+    const prio = getPriority(s);
+    const prioBadge = `<span class="priority priority-${prio}">${prio}</span>`;
+    const ch = s.ch==='ARIBA'?'<span class="ch-pill ch-ariba">ARIBA</span>':s.ch==='EMAIL_CORP'?'<span class="ch-pill ch-email">EMAIL</span>':`<span class="ch-pill ch-other">${s.ch}</span>`;
+    const barColor = s.rate>30?'var(--green)':s.rate>15?'var(--amber)':'var(--red)';
+    return `<tr onclick="drilldown(${i+supPage*SUP_PAGE_SIZE},'${s.name}')" style="cursor:pointer;">
+      <td class="td-name" title="${s.name}">${s.name}</td>
+      <td class="td-num">${s.total.toLocaleString()}</td>
+      <td class="td-num-red">${s.manual.toLocaleString()}</td>
+      <td class="${s.rate>30?'td-num-green':s.rate>15?'td-num':'td-num-red'}">${s.rate.toFixed(2)}%</td>
+      <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${s.rate}%;background:${barColor};"></div></div><span class="progress-label" style="color:${barColor};">${s.rate.toFixed(0)}%</span></div></td>
+      <td>${ch}</td>
+      <td>${prioBadge}</td>
+    </tr>`;
+  }).join('');
+
+  // Pagination
+  const pg = document.getElementById('sup-pagination');
+  pg.innerHTML = `<span>${total} vendors</span>`;
+  for(let p=0;p<pages;p++){
+    pg.innerHTML += `<button class="page-btn ${p===supPage?'active':''}" onclick="supGoPage(${p})">${p+1}</button>`;
+  }
+}
+
+function drilldown(idx, name) {
+  const s = filteredSuppliers.find(x=>x.name===name) || filteredSuppliers[0];
+  const acts = getActions(s);
+  document.getElementById('dd-title').textContent = `▸ ${s.name}`;
+  document.getElementById('dd-grid').innerHTML = `
+    <div class="dd-stat"><div class="dd-stat-label">Total Invoices</div><div class="dd-stat-value" style="color:var(--blue);">${s.total.toLocaleString()}</div></div>
+    <div class="dd-stat"><div class="dd-stat-label">Manual Count</div><div class="dd-stat-value" style="color:var(--red);">${s.manual.toLocaleString()}</div></div>
+    <div class="dd-stat"><div class="dd-stat-label">Touchless Count</div><div class="dd-stat-value" style="color:var(--green);">${s.touchless.toLocaleString()}</div></div>
+    <div class="dd-stat"><div class="dd-stat-label">Touchless Rate</div><div class="dd-stat-value" style="color:${s.rate>30?'var(--green)':s.rate>15?'var(--amber)':'var(--red)'};">${s.rate.toFixed(2)}%</div></div>
+    <div class="dd-stat"><div class="dd-stat-label">Channel</div><div class="dd-stat-value" style="font-size:14px;color:var(--text);">${s.ch}</div></div>
+    <div class="dd-stat"><div class="dd-stat-label">Recommended Actions</div><div style="margin-top:4px;">${acts.map(a=>`<span class="action-tag">${a}</span>`).join('')}</div></div>
+  `;
+  document.getElementById('drilldown-panel').classList.add('open');
+}
+
+function closeDrilldown() {
+  document.getElementById('drilldown-panel').classList.remove('open');
+}
+
+function supGoPage(p) { supPage=p; renderSupplierTable(); }
+function sortSupplier(col) {
+  if(supSortCol===col) supSortDir*=-1; else { supSortCol=col; supSortDir=-1; }
+  supPage=0; renderSupplierTable();
+}
+function setSupTab(tab, el) {
+  activeSupTab=tab; supPage=0;
+  document.querySelectorAll('#supplier-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderSupplierTable();
+}
+
+// ========================
+// ACTION TABLE
+// ========================
+function renderActionTable() {
+  const top = [...RAW_DATA.suppliers].sort((a,b)=>{
+    const pa = getPriority(a), pb = getPriority(b);
+    const order = {high:0,med:1,low:2};
+    if(order[pa]!==order[pb]) return order[pa]-order[pb];
+    return b.manual-a.manual;
+  }).slice(0,15);
+
+  const tbody = document.getElementById('action-tbody');
+  tbody.innerHTML = top.map((s,i)=>{
+    const prio = getPriority(s);
+    const prioBadge = `<span class="priority priority-${prio}">${prio}</span>`;
+    const ch = s.ch==='ARIBA'?'<span class="ch-pill ch-ariba">ARIBA</span>':s.ch==='EMAIL_CORP'?'<span class="ch-pill ch-email">EMAIL</span>':`<span class="ch-pill ch-other">${s.ch}</span>`;
+    const acts = getActions(s);
+    return `<tr>
+      <td class="td-num" style="color:var(--muted);">${i+1}</td>
+      <td class="td-name" title="${s.name}">${s.name}</td>
+      <td class="td-num-red">${s.manual.toLocaleString()}</td>
+      <td class="${s.rate>30?'td-num-green':s.rate>15?'td-num':'td-num-red'}">${s.rate.toFixed(2)}%</td>
+      <td>${ch}</td>
+      <td>${prioBadge}</td>
+      <td>${acts.map(a=>`<span class="action-tag">${a}</span>`).join(' ')}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ========================
+// FILTERS
+// ========================
+function populateVendorFilter() {
+  const sel = document.getElementById('f-vendor');
+  RAW_DATA.suppliers.sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
+    const o = document.createElement('option');
+    o.value=s.name; o.textContent=s.name;
+    sel.appendChild(o);
+  });
+}
+
+function applyFilters() {
+  const month = document.getElementById('f-month').value;
+  const channel = document.getElementById('f-channel').value;
+  const vendor = document.getElementById('f-vendor').value;
+
+  // Filter suppliers
+  filteredSuppliers = RAW_DATA.suppliers.filter(s=>{
+    if(channel && s.ch!==channel) return false;
+    if(vendor && s.name!==vendor) return false;
+    return true;
+  });
+
+  // Update KPIs based on filters
+  let data = filteredSuppliers;
+  if(channel) data = data.filter(s=>s.ch===channel);
+
+  const total = data.reduce((a,s)=>a+s.total,0);
+  const touchless = data.reduce((a,s)=>a+s.touchless,0);
+  const manual = total-touchless;
+  const rate = total>0 ? (touchless/total*100).toFixed(2) : '0.00';
+  const mrate = total>0 ? (manual/total*100).toFixed(2) : '0.00';
+
+  document.getElementById('kpi-total').textContent = total.toLocaleString();
+  document.getElementById('kpi-touchless').textContent = touchless.toLocaleString();
+  document.getElementById('kpi-manual').textContent = manual.toLocaleString();
+  document.getElementById('kpi-trate').textContent = rate+'%';
+  document.getElementById('kpi-mrate').textContent = mrate+'%';
+
+  supPage=0;
+  renderSupplierTable();
+}
+
+function resetFilters() {
+  document.getElementById('f-month').value='';
+  document.getElementById('f-channel').value='';
+  document.getElementById('f-vendor').value='';
+  filteredSuppliers=[...RAW_DATA.suppliers];
+  document.getElementById('kpi-total').textContent='33,070';
+  document.getElementById('kpi-touchless').textContent='6,846';
+  document.getElementById('kpi-manual').textContent='26,224';
+  document.getElementById('kpi-trate').textContent='20.70%';
+  document.getElementById('kpi-mrate').textContent='79.30%';
+  supPage=0; renderSupplierTable();
+}
+
+// ========================
+// INIT
+// ========================
+document.addEventListener('DOMContentLoaded',()=>{
+  initCharts();
+  renderChannelBars();
+  populateVendorFilter();
+  renderSupplierTable();
+  renderActionTable();
+});
+</script>
+</body>
+</html>
